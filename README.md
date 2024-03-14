@@ -17,9 +17,10 @@ $ minikube dashboard -p multinode-demo
 ```
 
 ### 3. 本地打包和内传image
+minikube node 内 docker image repository 与本地 host 机器是隔离的，如果想要 host 机器打包image后直接使用，需要将 image 传进 Kubernetes 集群。
 ```
 ./gradlew :app:jibDockerBuild --image open-ending.com/mss-app
-minikube image load open-ending.com/mss-app 
+minikube image load open-ending.com/mss-app -p multinode-demo
 ```
 
 
