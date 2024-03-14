@@ -1,0 +1,31 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: mss-app
+  redis:
+    host: ${REDIS_HOST:localhost}
+    port: 6379
+    timeout: 3000
+    connectTimeout: 10000
+
+management:
+  health:
+    diskspace:
+      enabled: true
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enable: true
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics

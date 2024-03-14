@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mss-app-deployment
+  namespace: u1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      open-ending.com/name: mss-app
+  template:
+    metadata:
+      labels:
+        open-ending.com/name: mss-app
+    spec:
+      containers:
+        - name: mss-app-container
+          image: open-ending.com/mss-app:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          resources:
+            requests:
+              cpu: 300m
+              memory: 256Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          env:
+            - name: REDIS_HOST
+              value: "demo-redis-service"

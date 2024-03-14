@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-redis-deployment
+  namespace: u1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      open-ending.com/name: demo-redis
+  template:
+    metadata:
+      labels:
+        open-ending.com/name: demo-redis
+    spec:
+      containers:
+        - name: redis-master
+          image: redis:7.2.4
+          imagePullPolicy: IfNotPresent
+          command: ["redis-server"]
+          args: ["/usr/local/etc/redis/redis.conf"]
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-config-volume
+              mountPath: /usr/local/etc/redis
+      volumes:
+        - name: redis-config-volume
+          configMap:
+            name: redis-conf

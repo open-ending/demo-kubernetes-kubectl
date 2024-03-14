@@ -1,0 +1,21 @@
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: external-redis-service-endpoints
+  namespace: u1
+  # by convention, use the name of the Service
+  # as a prefix for the name of the EndpointSlice
+  labels:
+    # You should set the "kubernetes.io/service-name" label.
+    # Set its value to match the name of the Service
+    kubernetes.io/service-name: external-redis-service
+addressType: IPv4
+ports:
+  - name: '' # empty because port 9376 is not assigned as a well-known
+    # port (by IANA)
+    appProtocol: tcp
+    protocol: TCP
+    port: 6379
+endpoints:
+  - addresses:
+      - "192.168.65.254"

@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: share-pod-deployment
+  namespace: u1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      open-ending.com/name: share-pod-app
+  template:
+    metadata:
+      labels:
+        open-ending.com/name: share-pod-app
+    spec:
+      containers:
+        - name: mss-app-container
+          image: open-ending.com/mss-app:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+          resources:
+            requests:
+              cpu: 300m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 512Mi
+        - name: redis-master
+          image: redis:7.2.4
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6739
+      nodeSelector:
+        workload: fulltime

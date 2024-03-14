@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: share-pod-ingress
+  namespace: u1
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: share-pod.test
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: share-pod-service
+                port:
+                  number: 8080
