@@ -24,7 +24,12 @@ spec:
           volumeMounts:
             - name: redis-config-volume
               mountPath: /usr/local/etc/redis
+            - name: redis-persist-volume
+              mountPath: /data/nfs-volume
       volumes:
         - name: redis-config-volume
           configMap:
             name: redis-conf
+        - name: redis-persist-volume
+          persistentVolumeClaim:
+            claimName: pvc-local-nfs

@@ -23,13 +23,24 @@ minikube node 内 docker image repository 与本地 host 机器是隔离的，�
 minikube image load open-ending.com/mss-app -p multinode-demo
 ```
 
+### 4. basic 目录下 demo 顺序
+- 1. 创建 namespace: `namespace-u1.yaml`
+- 2. 创建 configmap: `create-configmap-redis-config.sh`
+- 3. 创建 pvc: `pvc-local-nfs.yaml`
+- 4. 创建 Deployment for redis: `deployment-demo-redis.yaml`
+- 5. 创建 Service for redis: `service-demo-redis.yaml`
+- 6. 创建 Deployment for app: `deployment-mss-app.yaml`
+- 7. 创建 Service for app: `service-mss-app.yaml`
+- 8. 创建 hpa for app: `hpa-mss-app.yaml` (然后可以开始增加负载测试)
+- 9. 创建 ingress for app: `ingress-mss-app.yaml`(然后可以使用curl测试)
 
-### 4. 增加负载
+### 附件说明：
+- 增加负载命令
 ```
 kubectl run -i --tty load-generator-3 --rm --image=busybox:1.28 --restart=Never -- /bin/sh -c "while sleep 0.01; do wget -q -O- http://mss-app-service.u1:8080/test/count; done"
 ```
 
-### 5. ingress 端口访问
+- ingress 端口访问
 macOS 由于 minikube ip 不兼容的问题，即使安装和定义了ingress，依然需要`minikube tunnel`, 因此在 tunnel 开启后，解析域名需要使用下面这种写法。
 ```
 $ curl --resolve "mss-app.test:80:127.0.0.1" -i http://mss-app.test/test/count
