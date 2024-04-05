@@ -17,8 +17,8 @@ spec:
         - name: redis-master
           image: redis:7.2.4
           imagePullPolicy: IfNotPresent
-          command: ["redis-server"]
-          args: ["/usr/local/etc/redis/redis.conf"]
+          command: [ "redis-server" ]
+          args: [ "/usr/local/etc/redis/redis.conf" ]
           ports:
             - containerPort: 6379
           volumeMounts:

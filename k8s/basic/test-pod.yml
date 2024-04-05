@@ -5,13 +5,13 @@ metadata:
   namespace: u1
 spec:
   containers:
-  - name: tester
-    image: busybox
-    command: ["/bin/sh", "-c", "while true; do sleep 10000; done"]
-    volumeMounts:
-    - mountPath: /mnt/data
-      name: nfs-volume
+    - name: tester
+      image: busybox
+      command: [ "/bin/sh", "-c", "while true; do sleep 10000; done" ]
+      volumeMounts:
+        - mountPath: /mnt/data
+          name: nfs-volume
   volumes:
-  - name: nfs-volume
-    persistentVolumeClaim:
-      claimName: pvc-local-nfs
+    - name: nfs-volume
+      persistentVolumeClaim:
+        claimName: pvc-local-nfs
