@@ -1,7 +1,7 @@
 pipeline {
     agent {
         kubernetes {
-            label 'gradle-6-jdk11'
+            label 'jenkins-agent'
         }
     }
     stages {
