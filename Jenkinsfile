@@ -1,13 +1,15 @@
 pipeline {
     agent {
         kubernetes {
-            label 'jenkins-agent'
+            inheritFrom 'jenkins-agent-pod'
         }
     }
     stages {
         stage('Build') {
             steps{
-                sh './gradlew clean :app:check'
+                container('gradle-6-jdk11') {
+                    sh './gradlew clean :app:check'
+                }
             }
         }
     }
