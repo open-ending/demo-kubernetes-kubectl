@@ -24,7 +24,7 @@ pipeline {
         stage('Dockerize') {
             steps{
                 container('jnlp') {
-                    sh 'docker build -t demo-kubernetes-kubectl/jenkins/app-test-demo --no-cache .'
+                    sh 'docker build -t demo-kubernetes-kubectl/jenkins/app-test-demo:latest --no-cache .'
                 }
             }
         }
