@@ -6,17 +6,17 @@ pipeline {
         }
     }
     stages {
-        stage('checkstyle') {
+        stage('Checkstyle') {
             steps{
                 sh './gradlew clean :app:check'
             }
         }
-        stage('test') {
+        stage('Test') {
             steps{
                 sh './gradlew clean :app:test'
             }
         }
-        stage('build') {
+        stage('Build') {
             steps{
                 sh './gradlew clean :app:build'
             }
