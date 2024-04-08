@@ -16,6 +16,11 @@ pipeline {
                 sh './gradlew clean :app:test'
             }
         }
+        stage('SonarScan') {
+            withSonarQubeEnv() {
+              sh "./gradlew sonar"
+            }
+        }
         stage('Build') {
             steps{
                 sh './gradlew clean :app:build'

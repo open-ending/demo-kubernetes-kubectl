@@ -10,6 +10,8 @@ spec:
   serviceName: "jenkins-master-service"
   replicas: 1 # 默认值是 1
   minReadySeconds: 10 # 默认值是 0
+  updateStrategy:
+    type: RollingUpdate
   template:
     metadata:
       labels:
@@ -24,7 +26,7 @@ spec:
           securityContext:
             privileged: true
           volumeMounts:
-            - name: jenkins-data
+            - name: jenkins-home
               mountPath: /var/jenkins_home
       containers:
         - name: jenkins
@@ -58,10 +60,41 @@ spec:
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 3
+          env:
+            # Read the configuration-as-code from the ConfigMap
+            - name: CASC_JENKINS_CONFIG
+              value: /var/jenkins_config/configuration-as-code.yaml
           volumeMounts:
-            - name: jenkins-data
+            - name: jenkins-home
               mountPath: /var/jenkins_home
+            - name: jenkins-configuration-as-code
+              mountPath: /var/jenkins_config
       volumes:
-        - name: jenkins-data
-          persistentVolumeClaim:
-            claimName: jenkins-pv-claim
+        - name: jenkins-configuration-as-code
+          configMap:
+            name: jenkins-configuration-as-code
+  volumeClaimTemplates:
+    - metadata:
+        name: jenkins-home
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 1Gi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-master-service
+  namespace: kube-ops
+spec:
+  ports:
+    - port: 8080
+      name: web
+    - name: agent
+      port: 50000
+  type: LoadBalancer
+  externalTrafficPolicy: Local
+  selector:
+    app: jenkins-master

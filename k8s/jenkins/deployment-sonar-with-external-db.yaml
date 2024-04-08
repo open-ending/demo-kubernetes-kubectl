@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-sonarqube-deployment
+  namespace: kube-ops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-sonarqube
+  template:
+    metadata:
+      labels:
+        app: demo-sonarqube
+    spec:
+      initContainers:
+        - name: fix-permissions
+          image: busybox
+          command: [ "sh", "-c", "chown -R 1000:1000 /opt/sonarqube" ]
+          securityContext:
+            privileged: true
+          volumeMounts:
+            - name: host-data
+              mountPath: /opt/sonarqube
+      containers:
+        - name: sonarqube
+          image: sonarqube:lts-community
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9000
+          volumeMounts:
+            - name: host-data
+              mountPath: /opt/sonarqube/data
+              subPath: data
+            - name: host-data
+              mountPath: /opt/sonarqube/extensions
+              subPath: extensions
+            - name: host-data
+              mountPath: /opt/sonarqube/logs
+              subPath: logs
+          env:
+            - name: SONAR_JDBC_URL
+              value: jdbc:postgresql://host.minikube.internal:5432/postgres
+            - name: SONAR_JDBC_USERNAME
+              value: postgres
+            - name: SONAR_JDBC_PASSWORD
+              value:
+      volumes:
+        - name: host-data
+          hostPath:
+            path: /tmp/sonarqube
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-sonarqube-service
+  namespace: kube-ops
+spec:
+  ports:
+    - port: 9000
+      name: http
+      nodePort: 30021
+  type: NodePort
+  selector:
+    app: demo-sonarqube
