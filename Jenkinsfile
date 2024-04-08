@@ -7,37 +7,44 @@ pipeline {
     }
     stages {
         stage('Checkstyle') {
-            steps{
+            steps {
                 sh './gradlew clean :app:check'
             }
         }
         stage('Test') {
-            steps{
+            steps {
                 sh './gradlew clean :app:test'
             }
         }
         stage('SonarScan') {
-            steps{
+            steps {
                 withSonarQubeEnv('demo-sonarqube-service') {
-                  sh "./gradlew sonar"
+                    sh './gradlew sonar'
                 }
             }
         }
         stage('Build') {
-            steps{
+            steps {
                 sh './gradlew clean :app:build'
             }
         }
         stage('Dockerize') {
-            steps{
+            steps {
                 container('jnlp') {
                     script {
-                        docker.withRegistry("https://hub.docker.com/", "aeaf941c-a86b-4c8a-bb84-6826c8e3ffa0") {
-                            def customImage = docker.build("shadowpluto/demo-app:0.0.1")
+                        docker.withRegistry('https://register.hub.docker.com/', 'aeaf941c-a86b-4c8a-bb84-6826c8e3ffa0') {
+                            def customImage = docker.build('shadowpluto/demo-app:0.0.1')
                             customImage.push()
-                            sh "docker rmi shadowpluto/demo-app:0.0.1"
+                            sh 'docker rmi shadowpluto/demo-app:0.0.1'
                         }
                     }
+                }
+            }
+        }
+        stage('DeployQA') {
+            steps {
+                withKubeConfig([credentialsId: "c346fa00-b781-49af-891e-512f6c4be51b",serverUrl: "https://kubernetes.default.svc.cluster.local"]) {
+                    sh "kubectl get nodes"
                 }
             }
         }
