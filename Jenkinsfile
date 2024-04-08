@@ -32,7 +32,7 @@ pipeline {
             steps{
                 container('jnlp') {
                     script {
-                        docker.withRegistry("https://hub.docker.com/", "ca4509c6-1d1c-4d68-9ec8-ff03c3875eec") {
+                        docker.withRegistry("https://hub.docker.com/", "aeaf941c-a86b-4c8a-bb84-6826c8e3ffa0") {
                             def customImage = docker.build("shadowpluto/demo-app:0.0.1")
                             customImage.push()
                             sh "docker rmi shadowpluto/demo-app:0.0.1"
