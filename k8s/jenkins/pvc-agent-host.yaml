@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: jenkins-agent-pv-claim
+  name: Jenkinsfile-agent-pv-claim
   namespace: kube-ops
 spec:
   accessModes:

@@ -26,7 +26,7 @@ checkstyle {
 
 sonarqube {
     properties {
-        property 'sonar.projectkey', 'test-app-demo'
+        property 'sonar.projectkey', 'demo-kubernetes-kubectl:app'
     }
 }
 

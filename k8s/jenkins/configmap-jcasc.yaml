@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: jenkins-configuration-as-code
+  name: Jenkinsfile-configuration-as-code
   namespace: kube-ops
 data:
   configuration-as-code.yaml: |
