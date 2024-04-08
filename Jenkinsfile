@@ -17,8 +17,10 @@ pipeline {
             }
         }
         stage('SonarScan') {
-            withSonarQubeEnv() {
-              sh "./gradlew sonar"
+            steps{
+                withSonarQubeEnv() {
+                  sh "./gradlew sonar"
+                }
             }
         }
         stage('Build') {
