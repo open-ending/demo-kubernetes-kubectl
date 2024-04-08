@@ -43,7 +43,7 @@ pipeline {
         }
         stage('DeployQA') {
             steps {
-                withKubeConfig([credentialsId: "c346fa00-b781-49af-891e-512f6c4be51b",serverUrl: "https://kubernetes.default.svc.cluster.local"]) {
+                withKubeConfig([namespace: 'demo-app']) {
                     sh "kubectl get nodes"
                 }
             }
