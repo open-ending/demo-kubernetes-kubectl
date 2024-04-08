@@ -30,10 +30,12 @@ pipeline {
         }
         stage('Dockerize') {
             steps{
-                docker.withRegistry("https://hub.docker.com/", "ca4509c6-1d1c-4d68-9ec8-ff03c3875eec") {
-                    def customImage = docker.build("shadowpluto/demo-app:0.0.1")
-                    customImage.push()
-                    sh "docker rmi shadowpluto/demo-app:0.0.1"
+                container('jnlp') {
+                    docker.withRegistry("https://hub.docker.com/", "ca4509c6-1d1c-4d68-9ec8-ff03c3875eec") {
+                        def customImage = docker.build("shadowpluto/demo-app:0.0.1")
+                        customImage.push()
+                        sh "docker rmi shadowpluto/demo-app:0.0.1"
+                    }
                 }
             }
         }
