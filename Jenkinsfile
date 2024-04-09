@@ -28,24 +28,24 @@ pipeline {
                 sh './gradlew clean :app:build'
             }
         }
-        // stage('Dockerize') {
-        //     steps {
-        //         container('jnlp') {
-        //             script {
-        //                 docker.withRegistry('https://registry.hub.docker.com/', 'aeaf941c-a86b-4c8a-bb84-6826c8e3ffa0') {
-        //                     def customImage = docker.build('shadowpluto/demo-app:0.0.1')
-        //                     customImage.push()
-        //                     sh 'docker rmi shadowpluto/demo-app:0.0.1'
-        //                 }
-        //             }
-        //         }
-        //     }
-        // }
+        stage('Dockerize') {
+            steps {
+                container('jnlp') {
+                    script {
+                        docker.withRegistry('https://registry.hub.docker.com/', 'aeaf941c-a86b-4c8a-bb84-6826c8e3ffa0') {
+                            def customImage = docker.build('shadowpluto/demo-app:0.0.1')
+                            customImage.push()
+                            sh 'docker rmi shadowpluto/demo-app:0.0.1'
+                        }
+                    }
+                }
+            }
+        }
         stage('DeployQA') {
             steps {
                 container('helm-kubectl') {
                     withKubeConfig([namespace: 'demo-app']) {
-                        sh "kubectl get nodes"
+                        sh "kubectl apply -f app/k8s/"
                     }
                 }
             }

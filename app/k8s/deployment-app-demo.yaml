@@ -14,8 +14,8 @@ spec:
         name: demo-app
     spec:
       containers:
-        - name: test-demo-app
-          image: demo-kubernetes-kubectl/jenkins/test-demo-app:latest
+        - name: demo-app
+          image: shadowpluto/demo-app:0.0.1
           imagePullPolicy: Never
           ports:
             - containerPort: 8080
