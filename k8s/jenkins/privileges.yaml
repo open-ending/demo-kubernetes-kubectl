@@ -1,7 +1,7 @@
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
-  name: Jenkinsfile-admin-role
+  name: Jenkins-admin-role
 rules:
   - apiGroups: [ "" ]
     resources: [ "pods" ]
@@ -12,6 +12,9 @@ rules:
   - apiGroups: [ "" ]
     resources: [ "pods/log" ]
     verbs: [ "get", "list", "watch" ]
+  - apiGroup: [""]
+    resources: [ "services", "deployments"]
+    verbs: [ "create", "delete", "get", "list", "patch", "update", "watch" ]
   - apiGroups: [ "" ]
     resources: [ "secrets" ]
     verbs: [ "get" ]
@@ -19,18 +22,18 @@ rules:
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: Jenkinsfile-admin
+  name: Jenkin-admin
   namespace: kube-ops
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: Jenkinsfile-admin-binding
+  name: Jenkin-admin-binding
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: Jenkinsfile-admin-role
+  name: Jenkins-admin-role
 subjects:
   - kind: ServiceAccount
-    name: Jenkinsfile-admin
+    name: Jenkins-admin
     namespace: kube-ops

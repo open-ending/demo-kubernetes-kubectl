@@ -1,13 +1,13 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: Jenkinsfile-master-stateful
+  name: Jenkins-master-stateful
   namespace: kube-ops
 spec:
   selector:
     matchLabels:
-      app: Jenkinsfile-master
-  serviceName: "Jenkinsfile-master-service"
+      app: Jenkins-master
+  serviceName: "Jenkins-master-service"
   replicas: 1 # 默认值是 1
   minReadySeconds: 10 # 默认值是 0
   updateStrategy:
@@ -15,10 +15,10 @@ spec:
   template:
     metadata:
       labels:
-        app: Jenkinsfile-master
+        app: Jenkins-master
     spec:
       terminationGracePeriodSeconds: 10
-      serviceAccountName: Jenkinsfile-admin
+      serviceAccountName: Jenkins-admin
       initContainers:
         - name: fix-permissions
           image: busybox
@@ -26,11 +26,11 @@ spec:
           securityContext:
             privileged: true
           volumeMounts:
-            - name: Jenkinsfile-home
+            - name: Jenkins-home
               mountPath: /var/jenkins_home
       containers:
-        - name: Jenkinsfile
-          image: Jenkinsfile/Jenkinsfile:lts
+        - name: Jenkins
+          image: Jenkins/Jenkins:lts
           imagePullPolicy: IfNotPresent
           resources:
             limits:
@@ -65,17 +65,17 @@ spec:
             - name: CASC_JENKINS_CONFIG
               value: /var/jenkins_config/configuration-as-code.yaml
           volumeMounts:
-            - name: Jenkinsfile-home
+            - name: Jenkins-home
               mountPath: /var/jenkins_home
-            - name: Jenkinsfile-configuration-as-code
+            - name: Jenkins-configuration-as-code
               mountPath: /var/jenkins_config
       volumes:
-        - name: Jenkinsfile-configuration-as-code
+        - name: Jenkins-configuration-as-code
           configMap:
-            name: Jenkinsfile-configuration-as-code
+            name: Jenkins-configuration-as-code
   volumeClaimTemplates:
     - metadata:
-        name: Jenkinsfile-home
+        name: Jenkins-home
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
@@ -86,7 +86,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: Jenkinsfile-master-service
+  name: Jenkins-master-service
   namespace: kube-ops
 spec:
   ports:
@@ -97,4 +97,4 @@ spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   selector:
-    app: Jenkinsfile-master
+    app: Jenkins-master
