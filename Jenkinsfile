@@ -43,11 +43,11 @@ pipeline {
         // }
         stage('DeployQA') {
             steps {
-                container('helm-kubectl')(
+                container('helm-kubectl') {
                     withKubeConfig([namespace: 'demo-app']) {
                         sh "kubectl get nodes"
                     }
-                )
+                }
             }
         }
     }
