@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: haproxy-config
+  namespace: kube-ops
+data:
+  haproxy.cfg: |
+    defaults
+      mode tcp
+      timeout client 10s
+      timeout connect 5s
+      timeout server 10s
+      timeout http-request 10s
+      timeout http-keep-alive 10s
+      maxconn 300
+    
+    frontend to_jenkins
+      bind 0.0.0.0:8080
+      mode http
+      default_backend jenkins_service
+    
+    backend jenkins_service
+      balance first
+      mode http
+      option httpchk
+      http-check send meth GET uri /login
+      server jenkins-master-0 jenkins-master-stateful-0.jenkins-master-service.kube-ops.svc.cluster.local:8080 check inter 10s rise 2 fall 5
+      server jenkins-master-1 jenkins-master-stateful-1.jenkins-master-service.kube-ops.svc.cluster.local:8080 check inter 10s rise 2 fall 5
+

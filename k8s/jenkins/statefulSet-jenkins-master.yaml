@@ -1,14 +1,14 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: Jenkins-master-stateful
+  name: jenkins-master-stateful
   namespace: kube-ops
 spec:
   selector:
     matchLabels:
       app: jenkins-master
   serviceName: "jenkins-master-service"
-  replicas: 1 # 默认值是 1
+  replicas: 2 # 默认值是 1
   minReadySeconds: 10 # 默认值是 0
   updateStrategy:
     type: RollingUpdate
@@ -73,14 +73,17 @@ spec:
         - name: jenkins-configuration-as-code
           configMap:
             name: jenkins-configuration-as-code
-  volumeClaimTemplates:
-    - metadata:
-        name: jenkins-home
-      spec:
-        accessModes: [ "ReadWriteOnce" ]
-        resources:
-          requests:
-            storage: 1Gi
+        - name: jenkins-home
+          persistentVolumeClaim:
+            claimName: jenkins-master-pv-claim
+#  volumeClaimTemplates:
+#    - metadata:
+#        name: jenkins-home
+#      spec:
+#        accessModes: [ "ReadWriteMany" ]
+#        resources:
+#          requests:
+#            storage: 1Gi
 
 ---
 apiVersion: v1
@@ -89,12 +92,11 @@ metadata:
   name: jenkins-master-service
   namespace: kube-ops
 spec:
+  clusterIP: None
   ports:
     - port: 8080
       name: web
     - name: agent
       port: 50000
-  type: LoadBalancer
-  externalTrafficPolicy: Local
   selector:
     app: jenkins-master
