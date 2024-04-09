@@ -45,7 +45,7 @@ pipeline {
             steps {
                 container('helm-kubectl') {
                     withKubeConfig([namespace: 'demo-app']) {
-                        sh "kubectl apply -f app/k8s/"
+                        sh "kubectl apply -f app/k8s/deployment-app-demo.yaml"
                     }
                 }
             }
