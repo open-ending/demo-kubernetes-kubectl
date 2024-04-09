@@ -32,6 +32,7 @@ pipeline {
             steps {
                 container('jnlp') {
                     script {
+                        // docker pipeline plugin
                         docker.withRegistry('https://registry.hub.docker.com/', 'aeaf941c-a86b-4c8a-bb84-6826c8e3ffa0') {
                             def customImage = docker.build('shadowpluto/demo-app:0.0.1')
                             customImage.push()
@@ -44,6 +45,7 @@ pipeline {
         stage('DeployQA') {
             steps {
                 container('helm-kubectl') {
+                    // kubernetes cli plugin
                     withKubeConfig([namespace: 'demo-app']) {
                         sh "kubectl apply -f app/k8s/deployment-app-demo.yaml"
                     }
