@@ -47,8 +47,9 @@ spec:
               value:
       volumes:
         - name: host-data
-          hostPath:
-            path: /tmp/sonarqube
+          emptyDir: {}
+#          hostPath:
+#            path: /tmp/sonarqube
 
 ---
 apiVersion: v1
@@ -61,6 +62,7 @@ spec:
     - port: 9000
       name: http
       nodePort: 30021
-  type: NodePort
+  type: LoadBalancer
+  externalTrafficPolicy: Local
   selector:
     app: demo-sonarqube

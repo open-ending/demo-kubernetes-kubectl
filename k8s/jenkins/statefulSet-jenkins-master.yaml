@@ -6,8 +6,8 @@ metadata:
 spec:
   selector:
     matchLabels:
-      app: Jenkins-master
-  serviceName: "Jenkins-master-service"
+      app: jenkins-master
+  serviceName: "jenkins-master-service"
   replicas: 1 # 默认值是 1
   minReadySeconds: 10 # 默认值是 0
   updateStrategy:
@@ -15,10 +15,10 @@ spec:
   template:
     metadata:
       labels:
-        app: Jenkins-master
+        app: jenkins-master
     spec:
       terminationGracePeriodSeconds: 10
-      serviceAccountName: Jenkins-admin
+      serviceAccountName: jenkins-admin
       initContainers:
         - name: fix-permissions
           image: busybox
@@ -26,11 +26,11 @@ spec:
           securityContext:
             privileged: true
           volumeMounts:
-            - name: Jenkins-home
+            - name: jenkins-home
               mountPath: /var/jenkins_home
       containers:
-        - name: Jenkins
-          image: Jenkins/Jenkins:lts
+        - name: jenkins
+          image: jenkins/jenkins:lts
           imagePullPolicy: IfNotPresent
           resources:
             limits:
@@ -65,17 +65,17 @@ spec:
             - name: CASC_JENKINS_CONFIG
               value: /var/jenkins_config/configuration-as-code.yaml
           volumeMounts:
-            - name: Jenkins-home
+            - name: jenkins-home
               mountPath: /var/jenkins_home
-            - name: Jenkins-configuration-as-code
+            - name: jenkins-configuration-as-code
               mountPath: /var/jenkins_config
       volumes:
-        - name: Jenkins-configuration-as-code
+        - name: jenkins-configuration-as-code
           configMap:
-            name: Jenkins-configuration-as-code
+            name: jenkins-configuration-as-code
   volumeClaimTemplates:
     - metadata:
-        name: Jenkins-home
+        name: jenkins-home
       spec:
         accessModes: [ "ReadWriteOnce" ]
         resources:
@@ -86,7 +86,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: Jenkins-master-service
+  name: jenkins-master-service
   namespace: kube-ops
 spec:
   ports:
@@ -97,4 +97,4 @@ spec:
   type: LoadBalancer
   externalTrafficPolicy: Local
   selector:
-    app: Jenkins-master
+    app: jenkins-master

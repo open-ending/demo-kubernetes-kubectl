@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: Jenkins-configuration-as-code
+  name: jenkins-configuration-as-code
   namespace: kube-ops
 data:
   configuration-as-code.yaml: |
@@ -46,6 +46,17 @@ data:
               privileged: true
               runAsGroup: "999"
               runAsUser: "1000"
+              workingDir: "/home/jenkins/agent"
+            - args: "9999999"
+              command: "sleep"
+              image: "dtzar/helm-kubectl:latest"
+              livenessProbe:
+                failureThreshold: 0
+                initialDelaySeconds: 0
+                periodSeconds: 0
+                successThreshold: 0
+                timeoutSeconds: 0
+              name: "helm-kubectl"
               workingDir: "/home/jenkins/agent"
             id: "df8ded6e-8043-4344-9ae7-f29a94247980"
             label: "jenkins-agent"
