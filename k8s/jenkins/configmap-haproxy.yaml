@@ -25,5 +25,3 @@ data:
       option httpchk
       http-check send meth GET uri /login
       server jenkins-master-0 jenkins-master-stateful-0.jenkins-master-service.kube-ops.svc.cluster.local:8080 check inter 10s rise 2 fall 5
-      server jenkins-master-1 jenkins-master-stateful-1.jenkins-master-service.kube-ops.svc.cluster.local:8080 check inter 10s rise 2 fall 5
-

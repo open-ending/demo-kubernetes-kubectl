@@ -219,6 +219,15 @@ data:
         hideCredentials: false
         showEntireCommitSummaryInChanges: false
         useExistingAccountWithSameEmail: false
+      sonarGlobalConfiguration:
+        buildWrapperEnabled: false
+        installations:
+        - credentialsId: "4809ba2e-742c-488d-a700-d351d063cc9f"
+          name: "demo-sonarqube-service"
+          serverUrl: "http://demo-sonarqube-service.kube-ops.svc.cluster.local:9000"
+          triggers:
+            skipScmCause: false
+            skipUpstreamCause: false
       timestamper:
         allPipelines: false
         elapsedTimeFormat: "'<b>'HH:mm:ss.S'</b> '"

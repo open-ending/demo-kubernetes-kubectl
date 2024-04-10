@@ -18,6 +18,7 @@ pipeline {
         }
         stage('SonarScan') {
             steps {
+                // sonarqube plugin
                 withSonarQubeEnv('demo-sonarqube-service') {
                     sh './gradlew sonar'
                 }
