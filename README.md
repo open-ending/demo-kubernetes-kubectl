@@ -16,6 +16,8 @@ $ kubectl label --list nodes multinode-demo-m02
 
 # 启动 dashboard
 $ minikube dashboard -p multinode-demo
+# 启用ingress
+$ minikube addons enable ingress -p multinode-demo
 ```
 
 ### 3. 本地打包和内传image
